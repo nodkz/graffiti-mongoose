@@ -1,5 +1,6 @@
 import {reduce, reduceRight, merge} from 'lodash';
 import mongoose from 'mongoose';
+import { GraffitiWrapper } from '../wrappers/generic';
 
 const embeddedModels = {};
 
@@ -128,15 +129,23 @@ function extractPaths(schemaPaths, model) {
  * @return {Object} graffiti model
  */
 function getModel(model) {
-  const schemaPaths = model.schema.paths;
-  const name = model.modelName;
+  const ModelWrapper = model instanceof GraffitiWrapper
+    ? model
+    : new GraffitiWrapper(model);
+  ModelWrapper.run();
 
-  const fields = extractPaths(schemaPaths, {name});
+  const schemaPaths = ModelWrapper.getSchemaPaths();
+  const name = ModelWrapper.getModelName();
+
+  const fields = merge(
+    extractPaths(schemaPaths, {name}),
+    ModelWrapper.getExtraFields()
+  );
 
   return {
     name,
     fields,
-    model
+    model: ModelWrapper.getModel()
   };
 }
 

@@ -18,7 +18,8 @@ import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLScalarType,
-  GraphQLEnumType
+  GraphQLEnumType,
+  isType as isGraphQLType
 } from 'graphql/type';
 import {addHooks} from '../utils';
 import GraphQLDate from './custom/date';
@@ -205,7 +206,7 @@ function getType(graffitiModels, {name, description, fields}, path = [], rootTyp
   resolveReference[graphQLType.name] = resolveReference[graphQLType.name] || {};
   const graphQLTypeFields = reduce(fields, (graphQLFields,
       {name, description, type, subtype, reference, nonNull, hidden, hooks,
-       fields: subfields, embeddedModel, enumValues}, key) => {
+       fields: subfields, embeddedModel, enumValues, resolve}, key) => {
     name = name || key;
     const newPath = [...path, name];
 
@@ -248,6 +249,9 @@ function getType(graffitiModels, {name, description, fields}, path = [], rootTyp
       graphQLField.type = type;
     } else if (enumValues && type === 'String') {
       graphQLField.type = listToGraphQLEnumType(enumValues, getTypeFieldName(graphQLType.name, `${name}Enum`));
+    } else if (isGraphQLType(type)) {
+      graphQLField.type = type;
+      graphQLField.resolve = resolve;
     } else {
       graphQLField.type = stringToGraphQLType(type);
     }
@@ -374,5 +378,6 @@ export {
   nodeInterface,
   getTypeFields,
   setTypeFields,
-  getArguments
+  getArguments,
+  stringToGraphQLType
 };
