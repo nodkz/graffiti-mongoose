@@ -61,6 +61,10 @@ function addOne(Collection, args) {
     }
 
     return null;
+  }, (err) => {
+    console.log(err);
+    err.message = `${err.message} ${JSON.stringify(err.errors)}`;
+    return err;
   });
 }
 
