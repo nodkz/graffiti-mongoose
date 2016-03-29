@@ -30,6 +30,10 @@ import {connectionFromModel, getOneResolver} from '../query';
 // Registered types will be saved, we can access them later to resolve types
 const types = [];
 
+// All types, which was constructed before `getSchema` was called.
+// Used for injecting to other types.
+const prepearedTypes = [];
+
 /**
  * Add new type
  * @param {String} name
@@ -198,6 +202,10 @@ const resolveReference = {};
  * @return {GraphQLObjectType}
  */
 function getType(graffitiModels, {name, description, fields}, path = [], rootType = null) {
+  if (prepearedTypes.hasOwnProperty(name)) {
+    return prepearedTypes[name];
+  }
+
   const root = path.length === 0;
   const graphQLType = {name, description};
   rootType = rootType || graphQLType;
@@ -295,6 +303,8 @@ function getType(graffitiModels, {name, description, fields}, path = [], rootTyp
   if (root) {
     addType(name, GraphQLObjectTypeDefinition);
   }
+
+  prepearedTypes[name] = GraphQLObjectTypeDefinition;
 
   return GraphQLObjectTypeDefinition;
 }
