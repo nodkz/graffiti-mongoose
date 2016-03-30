@@ -4,6 +4,7 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLObjectType,
+  GraphQLInterfaceType,
   GraphQLSchema,
   GraphQLBoolean,
   GraphQLFloat
@@ -111,6 +112,10 @@ function getMutationField(graffitiModel, type, viewer, hooks = {}, allowMongoIDM
 
   const fields = getTypeFields(type);
   const inputFields = reduce(fields, (inputFields, field) => {
+    if (field.type instanceof GraphQLInterfaceType) {
+      return inputFields;
+    }
+
     if (field.type instanceof GraphQLObjectType) {
       if (field.type.name.endsWith('Connection')) {
         inputFields[field.name] = {
