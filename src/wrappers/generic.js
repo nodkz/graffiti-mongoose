@@ -10,6 +10,7 @@ export class GraffitiWrapper {
 
     this.opts = opts;
     this.extraFields = {};
+    this.extraInterfaces = [];
   }
 
   run() {
@@ -17,6 +18,7 @@ export class GraffitiWrapper {
       this.isExecuted = true;
       this.prevWrapper.run();
       this.extraFields = Object.assign({}, this.prevWrapper.getExtraFields(), this.extraFields);
+      this.interfaces = [...this.prevWrapper.getExtraInterfaces(), ...this.extraInterfaces];
     }
   }
 
@@ -34,5 +36,9 @@ export class GraffitiWrapper {
 
   getExtraFields() {
     return this.extraFields;
+  }
+
+  getExtraInterfaces() {
+    return this.extraInterfaces;
   }
 }

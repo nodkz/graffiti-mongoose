@@ -32,7 +32,11 @@ const types = [];
 
 // All types, which was constructed before `getSchema` was called.
 // Used for injecting to other types.
-const prepearedTypes = [];
+const prepearedTypes = {};
+
+function getExistedType(name) {
+  return prepearedTypes[name];
+}
 
 /**
  * Add new type
@@ -201,7 +205,10 @@ const resolveReference = {};
  * @param  {Boolean} root
  * @return {GraphQLObjectType}
  */
-function getType(graffitiModels, {name, description, fields}, path = [], rootType = null) {
+function getType(graffitiModels,
+                 {name, description, fields, interfaces},
+                 path = [],
+                 rootType = null) {
   if (prepearedTypes.hasOwnProperty(name)) {
     return prepearedTypes[name];
   }
@@ -289,8 +296,10 @@ function getType(graffitiModels, {name, description, fields}, path = [], rootTyp
 
   if (root) {
     // Implement the Node interface
-    graphQLType.interfaces = [nodeInterface];
+    graphQLType.interfaces = [nodeInterface, ...interfaces];
     graphQLTypeFields.id = globalIdField(name, (obj) => obj._id);
+  } else {
+    graphQLType.interfaces = interfaces;
   }
 
   // Add fields to the GraphQL type
@@ -389,5 +398,6 @@ export {
   getTypeFields,
   setTypeFields,
   getArguments,
-  stringToGraphQLType
+  stringToGraphQLType,
+  getExistedType
 };

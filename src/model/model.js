@@ -145,7 +145,8 @@ function getModel(model) {
   return {
     name,
     fields,
-    model: ModelWrapper.getModel()
+    model: ModelWrapper.getModel(),
+    interfaces: ModelWrapper.getExtraInterfaces()
   };
 }
 

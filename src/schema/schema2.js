@@ -1,7 +1,7 @@
 import { GraphQLSchema } from 'graphql';
 import { getFields } from './schema';
 import { getModel } from './../model/model';
-import { getType } from './../type/type';
+import { getType, getExistedType } from './../type/type';
 
 const allModels = {};
 const rootModels = {};
@@ -42,5 +42,6 @@ function getSchema(options = {}) {
 export {
   getSchema,
   addMongooseModel,
-  getGQType
+  getGQType,
+  getExistedType
 };
