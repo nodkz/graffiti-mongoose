@@ -1,7 +1,8 @@
 import { GraphQLSchema } from 'graphql';
 import { getFields } from './schema';
 import { getModel } from './../model/model';
-import { getType, getExistedType } from './../type/type';
+import { getType, getExistedType, nodeInterface } from './../type/type';
+import { getOneResolver } from './../query';
 
 const allModels = {};
 const rootModels = {};
@@ -29,6 +30,10 @@ function getGQType(mongooseModel) {
   return getType(allModels, graffitiModel);
 }
 
+function getGraffityModel(name) {
+  return allModels[name];
+}
+
 /**
  * Returns a GraphQL schema including query and mutation fields
  * @param  {Object} options
@@ -43,5 +48,8 @@ export {
   getSchema,
   addMongooseModel,
   getGQType,
-  getExistedType
+  getExistedType,
+  nodeInterface,
+  getGraffityModel,
+  getOneResolver
 };
