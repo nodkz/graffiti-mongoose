@@ -19,7 +19,7 @@ function addMongooseModel(mongooseModel, isRootType = true) {
   return graffitiModel;
 }
 
-function getGQType(mongooseModel) {
+function getGQType(mongooseModel, path = [], rootType = null) {
   const graffitiModel = allModels[mongooseModel.modelName];
 
   if (!graffitiModel) {
@@ -27,7 +27,7 @@ function getGQType(mongooseModel) {
                   + 'to graffiti via method `addMongooseModel()`');
   }
 
-  return getType(allModels, graffitiModel);
+  return getType(allModels, graffitiModel, path, rootType);
 }
 
 function getGraffityModel(name) {

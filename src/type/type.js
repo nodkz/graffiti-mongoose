@@ -257,8 +257,8 @@ function getType(graffitiModels,
       const nestedObjectName = getTypeFieldName(graphQLType.name, name);
       graphQLField.type = getType(graffitiModels, {name: nestedObjectName, description, fields}, newPath, rootType);
     } else if (type === 'Embedded') {
-      const type = types.hasOwnProperty(name)
-        ? types[name]
+      const type = prepearedTypes.hasOwnProperty(name)
+        ? prepearedTypes[name]
         : getType(graffitiModels, embeddedModel, ['embedded']);
       type.mongooseEmbedded = true;
       graphQLField.type = type;
