@@ -6,6 +6,7 @@ import { nodeInterface } from '../../schema/schema';
 import {
   GraphQLScalarType,
   GraphQLInputObjectType,
+  GraphQLInterfaceType,
   GraphQLEnumType,
   GraphQLID
 } from 'graphql';
@@ -21,7 +22,12 @@ function createInputObject(type) {
       fields: {}
     });
     cachedTypes[typeName]._typeConfig.fields =
-      () => filterFields(type.getFields(), (field) => (!field.noInputObject)); // eslint-disable-line
+      () => filterFields( // eslint-disable-line
+        type.getFields(),
+        (field) => (
+          !field.noInputObject && !(field.type instanceof GraphQLInterfaceType)
+        )
+      );
   }
 
   return cachedTypes[typeName];
